@@ -1,99 +1,25 @@
-# 🐾 Pupiverse — Every Pup Is Family
+# TeddyPups U.A.E. website recreation
 
-Pupiverse is a modern, interactive puppy website inspired by the belief that dogs are more than pets — they're family. The project aims to create a warm, welcoming digital experience where love for our furry companions comes first.
+A React/Vite recreation of the TeddyPups U.A.E. reference site. It includes separate routes for Home, Puppies, 42 puppy profiles linked throughout the site, Happy families, Gone home, How it works, FAQ, and Visit & contact. The saved page captures and matching stylesheet preserve the reference layouts, imagery, typography, and colors.
 
-## ✨ Features
+## Run locally
 
-- 🐶 Warm, dog-friendly visual design
-- 📱 Responsive layouts for desktop, tablet, and mobile
-- 🎨 Modern UI with reusable React components
-- ✨ Smooth animations and interactive elements
-- 🧭 Intuitive navigation and user-friendly browsing
-- 💻 Clean, maintainable frontend architecture
-
-## 🛠️ Tech Stack
-
-- React
-- TypeScript
-- Vite
-- Tailwind CSS
-- Framer Motion
-- Lucide React
-- React Router
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-Make sure you have Node.js and npm installed.
-
-### Installation
-
-1. Clone the repository:
-
-   ```bash
-   git clone https://github.com/YOUR-USERNAME/pupiverse.git
-   ```
-
-2. Navigate to the project directory:
-
-   ```bash
-   cd pupiverse
-   ```
-
-3. Install dependencies:
-
-   ```bash
-   npm install
-   ```
-
-4. Start the development server:
-
-   ```bash
-   npm run dev
-   ```
-
-5. Open the local URL displayed in your terminal.
-
-## 📂 Project Structure
-
-```text
-pupiverse/
-├── public/             # Static assets
-├── src/
-│   ├── assets/         # Images and other assets
-│   ├── components/     # Reusable UI components
-│   ├── pages/          # Website pages
-│   ├── App.tsx         # Main application
-│   ├── main.tsx        # Application entry point
-│   └── index.css       # Global styles
-├── index.html
-├── package.json
-├── vite.config.ts
-└── README.md
+```powershell
+npm install
+npm run dev
 ```
 
-*The structure may evolve as development progresses.*
+Use the local URL printed by Vite. To verify a production build and lint the code:
 
-## 🎯 Project Goal
+```powershell
+npm run build
+npm run lint
+```
 
-The goal is to recreate the reference website's visual experience, responsive behavior, and interactive functionality while maintaining readable code and a thoughtful user experience.
+## Assets and integrations
 
-This is an independent frontend recreation project and is not affiliated with or endorsed by the original website.
-
-## 💗 Our Philosophy
-
-Dogs give us unconditional love, loyalty, and companionship. Pupiverse celebrates the idea that every dog deserves to be treated as family — with care, kindness, and a place to call home.
-
-**Because they're not just pets. They're family. 🐾**
-
-## 📌 Project Status
-
-🚧 Under development
-
-More features, visual refinements, and functionality will be added as the project progresses.
-
-## 👩‍💻 Author
-
-**Bhawana Bisht**
-
+- The rendered pages are saved in `public/reference-pages/`; puppy profile snapshots are in `public/reference-pages/puppies/`.
+- The matching page and font stylesheets are in `src/reference-site.css` and `src/reference-fonts.css`. Latin font files are also stored locally in `public/fonts/`.
+- The page captures preserve the reference content and layout at capture time. Referenced photos, video, logo, and paw cursor assets are stored locally in `public/reference-assets/`.
+- Page navigation, the mobile menu, listing filters, puppy journey tabs, FAQ search and accordions, and family photo viewer are wired locally. On Home, the puppy follows the scroll path, walks across the pinned horizontal puppy hallway, and settles into the footer basket. The enquiry form validates the required name and phone fields, then opens WhatsApp; there is no connected form backend or email service.
+- Puppy listings and availability reflect the reference when captured and should be checked against current availability before use.

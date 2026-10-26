@@ -1,17 +1,106 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Figtree";
+  src: url("/fonts/figtree-latin.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 300 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Fraunces";
+  src: url("/fonts/fraunces-latin.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Shantell Sans";
+  src: url("/fonts/shantell-latin.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 300 800;
+  font-display: swap;
+}
+
+:root {
+  font-family: "Figtree", Arial, sans-serif;
+  color: #2a170e;
+  background: #fffdf8;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --ink: #2a170e;
+  --ink-soft: #5a3a28;
+  --paper: #fffdf8;
+  --paper-deep: #fff7e9;
+  --honey: #f2be6b;
+  --honey-light: #fbe3b4;
+  --rust: #a24a1a;
+  --rust-deep: #8e3f15;
+  --green: #1f7a4d;
+  --green-soft: #e8f2ea;
+  --line: #e8dfd3;
+  --footer: #24130b;
+  --serif: Georgia, "Times New Roman", serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 html {
+  min-width: 320px;
   scroll-behavior: smooth;
+  scroll-padding-top: 96px;
 }
 
 body {
-  margin: 0;
   min-width: 320px;
-  font-family: Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+h1,
+h2,
+h3,
+.brand-name {
+  font-family: "Fraunces", Georgia, serif;
+}
+
+body,
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
 }
 
 button,
 a {
-  -webkit-tap-highlight-color: transparent;
+  color: inherit;
+}
+
+a {
+  text-decoration: none;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid var(--green);
+  outline-offset: 4px;
+}
+
+::selection {
+  color: var(--ink);
+  background: var(--honey-light);
 }
