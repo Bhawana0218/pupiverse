@@ -301,33 +301,62 @@ function ReferenceSnapshotPage({ page, slug }) {
     let sitAmount = 0
     let sitTarget = 0
     let lastMoveAt = 0
+    let sitReady = false
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const tailStrokePath = actorParts?.tail?.querySelector('path')
+    if (tailStrokePath) {
+      tailStrokePath.setAttribute('stroke-width', '13')
+      tailStrokePath.setAttribute('stroke-linecap', 'round')
+    }
 
     function paintWalk(deltaSeconds) {
       if (!actorParts || reducedMotion) return
+
+      const now = performance.now()
+      const idle = now - lastMoveAt > 480 && walkStrideTarget < 0.01 && sitReady
+      sitTarget = idle ? 1 : 0
+
       walkStride += (walkStrideTarget - walkStride) * Math.min(1, deltaSeconds * 9)
-      if (walkStride < 0.001 && walkStrideTarget < 0.001) {
-        walkStride = 0
-        if (walkPhase === 0) return
-      }
+      sitAmount += (sitTarget - sitAmount) * Math.min(1, deltaSeconds * 6)
+      if (walkStride < 0.001 && walkStrideTarget < 0.001) walkStride = 0
+
       walkPhase += deltaSeconds * (5.2 + walkStride * 14)
+      const sit = sitAmount
+      const stand = 1 - sit
       const swing = Math.sin(walkPhase) * 26 * walkStride
       const bob = Math.abs(Math.cos(walkPhase)) * -5 * walkStride
-      const wag = Math.sin(walkPhase * 1.6) * 22 * (0.35 + walkStride * 0.65)
+      const breath = Math.sin(walkPhase * 0.7) * 1.4 * sit
+      const wag = Math.sin(walkPhase * 1.6) * 26 * (0.4 + walkStride * 0.6)
 
-      if (actorParts.bf) actorParts.bf.setAttribute('transform', `translate(94 192) rotate(${swing})`)
-      if (actorParts.ff) actorParts.ff.setAttribute('transform', `translate(168 192) rotate(${-swing})`)
-      if (actorParts.bn) actorParts.bn.setAttribute('transform', `translate(110 194) rotate(${-swing})`)
-      if (actorParts.fn) actorParts.fn.setAttribute('transform', `translate(186 194) rotate(${swing})`)
-      if (actorParts.tail) actorParts.tail.setAttribute('transform', `rotate(${-20 + wag} 84 150)`)
+      const legSwing = swing * stand
+      if (actorParts.bf) {
+        actorParts.bf.setAttribute('transform', `translate(94 192) rotate(${legSwing})`)
+        actorParts.bf.setAttribute('opacity', String(stand))
+      }
+      if (actorParts.ff) actorParts.ff.setAttribute('transform', `translate(168 192) rotate(${-legSwing})`)
+      if (actorParts.bn) {
+        actorParts.bn.setAttribute('transform', `translate(110 194) rotate(${-legSwing})`)
+        actorParts.bn.setAttribute('opacity', String(stand))
+      }
+      if (actorParts.fn) actorParts.fn.setAttribute('transform', `translate(186 194) rotate(${legSwing})`)
+
+      if (actorParts.tail) {
+        const sitTail = -34 * sit
+        actorParts.tail.setAttribute('transform', `rotate(${-20 + wag * (0.5 + stand * 0.5) + sitTail} 84 150)`)
+      }
+      if (actorParts.haunch) actorParts.haunch.setAttribute('opacity', String(sit))
+
       if (actorParts.body) {
         actorParts.body.setAttribute(
           'transform',
-          `translate(0 ${bob.toFixed(2)}) rotate(0 196 206) translate(196 0) scale(1 1) translate(-196 0)`,
+          `translate(0 ${(bob + breath).toFixed(2)}) rotate(${(sit * -5).toFixed(2)} 196 206) translate(196 0) scale(1 1) translate(-196 0)`,
         )
       }
       if (actorParts.head) {
-        actorParts.head.setAttribute('transform', `translate(0 ${(bob * 0.45).toFixed(2)}) rotate(0 212 100)`)
+        actorParts.head.setAttribute(
+          'transform',
+          `translate(0 ${(bob * 0.45 - breath * 0.5).toFixed(2)}) rotate(${(sit * 4).toFixed(2)} 212 100)`,
+        )
       }
     }
 
@@ -340,8 +369,7 @@ function ReferenceSnapshotPage({ page, slug }) {
         const delta = lastWalkTime ? Math.min(0.05, (now - lastWalkTime) / 1000) : 0
         lastWalkTime = now
         paintWalk(delta)
-        if (walkStride > 0.001 || walkStrideTarget > 0.001) requestWalkFrame()
-        else lastWalkTime = 0
+        requestWalkFrame()
       })
     }
 
@@ -514,14 +542,22 @@ function ReferenceSnapshotPage({ page, slug }) {
         }
 
         if (actorParts) {
-          const moved = lastActorX === null ? 0 : Math.abs(x - lastActorX)
+          const dx = lastActorX === null ? 0 : x - lastActorX
+          const moved = Math.abs(dx)
           lastActorX = x
-          walkStrideTarget = Math.min(1, moved / 9) * (1 - basketOpacity)
-          if (walkStrideTarget > 0.01) requestWalkFrame()
-          else {
-            walkStrideTarget = 0
-            requestWalkFrame()
+          if (moved > 0.12) {
+            actorFacing = dx > 0 ? 1 : -1
+            lastMoveAt = performance.now()
           }
+          walkStrideTarget = Math.min(1, moved / 9) * (1 - basketOpacity)
+          sitReady = basketOpacity < 0.5 && peekOut > 0.5
+          if (actorParts.root) {
+            actorParts.root.setAttribute(
+              'transform',
+              actorFacing === -1 ? 'translate(300 0) scale(-1 1)' : '',
+            )
+          }
+          requestWalkFrame()
         }
       }
 

@@ -4,37 +4,37 @@ import { Link } from 'react-router-dom'
 import { WHATSAPP_URL } from '../siteConfig.js'
 
 const heroPuppyImage =
-  '/reference-assets/media/FHyoHcIosLZE/60f6e7e00a/27b888_323008bb0f6a41d4bde2a0da7206cd98f000.jpg'
+  '/reference-assets/media/apricot-teddy-puppy-showroom.jpg'
 
 const puppyImages = [
   {
     name: 'Max',
     detail: 'Maltipoo · boy · 3 months',
-    image: '/reference-assets/media/Z0ToauDx7Eve/5fffe4d022/b942a5_4b8cfb8204d24eadaf524332aba1dc15-mv2.webp',
+    image: '/reference-assets/media/max-maltipoo.webp',
     alt: 'Max, male Maltipoo puppy',
   },
   {
     name: 'Korean Teacup Maltipoo',
     detail: 'girl · 2 months',
-    image: '/reference-assets/media/gAaGwoGej2g6/5523e884dd/b942a5_50f0ae67c9ff437d911597d52a9e63b3-mv2.jpg',
+    image: '/reference-assets/media/korean-teacup-maltipoo.jpg',
     alt: 'Female Korean Teacup Maltipoo puppy',
   },
   {
     name: 'Korean Teacup Poodle',
     detail: 'girl · 2 months',
-    image: '/reference-assets/media/xeMJCapr5vcU/e618c653b2/b942a5_14376a216177484dbbb27995d0f6aeb7-mv2.jpg',
+    image: '/reference-assets/media/korean-teacup-poodle.jpg',
     alt: 'Female Korean Teacup Poodle puppy',
   },
   {
     name: 'Maltipoo & Cavapoo',
     detail: 'boy · 3 months',
-    image: '/reference-assets/media/YQhey4j7uWvZ/3ea10db6c1/b942a5_7ce7e7bd18424b6c8fb16dd30113ade2-mv2.jpg',
+    image: '/reference-assets/media/maltipoo-amp-cavapoo.jpg',
     alt: 'Male Maltipoo and Cavapoo puppy',
   },
   {
     name: 'Toy Poodle',
     detail: 'boy & girl · 2 months',
-    image: '/reference-assets/media/vMu0BPvkAZ-j/c65e53967d/b942a5_0b2c0c0d178c4005acbe28725a5ea573-mv2.jpg',
+    image: '/reference-assets/media/toy-poodle.jpg',
     alt: 'Toy Poodle puppy',
   },
 ]
@@ -188,7 +188,7 @@ function WaysToMeet() {
             <img
               alt="A small puppy at the TeddyPups Dubai showroom"
               loading="lazy"
-              src="/reference-assets/media/FHyoHcIosLZE/60f6e7e00a/27b888_323008bb0f6a41d4bde2a0da7206cd98f000.jpg"
+              src="/reference-assets/media/apricot-teddy-puppy-showroom.jpg"
             />
           </div>
           <div className="reference-way-content">
@@ -203,7 +203,7 @@ function WaysToMeet() {
             <img
               alt="A fluffy teacup puppy available to order"
               loading="lazy"
-              src="/reference-assets/media/vzf7P8SPCZ-Q/a8db4ee114/b942a5_967bb346583b4146acb56607f5da5f21-mv2.jpg"
+              src="/reference-assets/media/korean-teacup-pomeranian-3.jpg"
             />
           </div>
           <div className="reference-way-content">
@@ -284,7 +284,7 @@ function HappyFamilies() {
           <img
             alt="A TeddyPups family with their new puppy"
             loading="lazy"
-            src="/reference-assets/media/TUslu26Ueaq-/9c3516c040/edb2f5_6627857aca7e495ea37d9f62d814d323-mv2.jpeg"
+            src="/reference-assets/media/happy-family-with-their-new-puppy-55.jpeg"
           />
         </div>
         <div className="reference-testimonial-copy">

@@ -110,7 +110,7 @@ function ContactPage() {
             <img
               alt="A TeddyPups puppy at the Dubai showroom"
               loading="lazy"
-              src="/reference-assets/media/skvodl2NZiKq/cefab5eee9/27b888_323008bb0f6a41d4bde2a0da7206cd98f003.jpg"
+              src="/reference-assets/media/apricot-teddy-puppy-showroom-3.jpg"
             />
           </div>
         </aside>
