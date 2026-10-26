@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes, useParams } from 'react-router-
 import ReferenceSnapshotPage from './components/ReferenceSnapshotPage.jsx'
 import './reference-fonts.css'
 import './reference-site.css'
+import './pup-enhancements.css'
 
 function PuppyDetailPage() {
   const { slug } = useParams()

@@ -255,18 +255,103 @@ function ReferenceSnapshotPage({ page, slug }) {
     const puppyStops = page === 'home'
       ? all('[data-pup-stop="true"]').filter((stop) => stop !== meetPuppyStop)
       : []
-    const pawPrintLayer = page === 'home' ? one('.pup-prints') : null
-    const pawPrints = pawPrintLayer ? [...pawPrintLayer.querySelectorAll('svg')] : []
+    const pawPrintLayer = one('.pup-prints') || (() => {
+      const layer = document.createElement('div')
+      layer.className = 'pup-prints'
+      layer.setAttribute('aria-hidden', 'true')
+      for (let index = 0; index < 24; index += 1) {
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+        svg.setAttribute('viewBox', '0 0 64 64')
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
+        path.setAttribute(
+          'd',
+          'M32 30.5c-7.6 0-15.6 8.3-15.6 15.5 0 5.4 4.2 8.3 9.2 8.3 2.6 0 4.5-1.1 6.4-1.1s3.8 1.1 6.4 1.1c5 0 9.2-2.9 9.2-8.3 0-7.2-8-15.5-15.6-15.5zM19.28 26.71C21.07 30.08 20.42 33.92 17.84 35.29C15.25 36.67 11.71 35.05 9.92 31.69C8.13 28.32 8.78 24.48 11.36 23.11C13.95 21.73 17.49 23.35 19.28 26.71ZM29.62 15.64C30.32 19.62 28.46 23.26 25.47 23.79C22.48 24.32 19.48 21.53 18.78 17.56C18.08 13.58 19.94 9.94 22.93 9.41C25.92 8.88 28.92 11.67 29.62 15.64ZM45.22 17.56C44.52 21.53 41.52 24.32 38.53 23.79C35.54 23.26 33.68 19.62 34.38 15.64C35.08 11.67 38.08 8.88 41.07 9.41C44.06 9.94 45.92 13.58 45.22 17.56ZM54.08 31.69C52.29 35.05 48.75 36.67 46.16 35.29C43.58 33.92 42.93 30.08 44.72 26.71C46.51 23.35 50.05 21.73 52.64 23.11C55.22 24.48 55.87 28.32 54.08 31.69Z',
+        )
+        svg.append(path)
+        layer.append(svg)
+      }
+      document.body.insertBefore(layer, document.getElementById('root'))
+      return layer
+    })()
+    const pawPrints = [...pawPrintLayer.querySelectorAll('svg')]
     const pawPrintTimers = new Map()
     let lastPawPoint = null
     let pawPrintIndex = 0
+
+    const actorSvg = actor?.querySelector('.pup-actor__body > svg') || actor?.querySelector('svg')
+    const actorParts = actorSvg
+      ? {
+        bf: actorSvg.querySelector('[data-p="bf"]'),
+        ff: actorSvg.querySelector('[data-p="ff"]'),
+        bn: actorSvg.querySelector('[data-p="bn"]'),
+        fn: actorSvg.querySelector('[data-p="fn"]'),
+        tail: actorSvg.querySelector('[data-p="tail"]'),
+        body: actorSvg.querySelector('[data-p="body"]'),
+        head: actorSvg.querySelector('[data-p="head"]'),
+        ledge: actorSvg.querySelector('[data-p="ledge"]'),
+        root: actorSvg.querySelector('[data-p="root"]'),
+        haunch: actorSvg.querySelector('[data-p="haunch"]'),
+      }
+      : null
+    let walkPhase = 0
+    let walkStride = 0
+    let walkStrideTarget = 0
+    let lastActorX = null
+    let actorFacing = 1
+    let sitAmount = 0
+    let sitTarget = 0
+    let lastMoveAt = 0
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    function paintWalk(deltaSeconds) {
+      if (!actorParts || reducedMotion) return
+      walkStride += (walkStrideTarget - walkStride) * Math.min(1, deltaSeconds * 9)
+      if (walkStride < 0.001 && walkStrideTarget < 0.001) {
+        walkStride = 0
+        if (walkPhase === 0) return
+      }
+      walkPhase += deltaSeconds * (5.2 + walkStride * 14)
+      const swing = Math.sin(walkPhase) * 26 * walkStride
+      const bob = Math.abs(Math.cos(walkPhase)) * -5 * walkStride
+      const wag = Math.sin(walkPhase * 1.6) * 22 * (0.35 + walkStride * 0.65)
+
+      if (actorParts.bf) actorParts.bf.setAttribute('transform', `translate(94 192) rotate(${swing})`)
+      if (actorParts.ff) actorParts.ff.setAttribute('transform', `translate(168 192) rotate(${-swing})`)
+      if (actorParts.bn) actorParts.bn.setAttribute('transform', `translate(110 194) rotate(${-swing})`)
+      if (actorParts.fn) actorParts.fn.setAttribute('transform', `translate(186 194) rotate(${swing})`)
+      if (actorParts.tail) actorParts.tail.setAttribute('transform', `rotate(${-20 + wag} 84 150)`)
+      if (actorParts.body) {
+        actorParts.body.setAttribute(
+          'transform',
+          `translate(0 ${bob.toFixed(2)}) rotate(0 196 206) translate(196 0) scale(1 1) translate(-196 0)`,
+        )
+      }
+      if (actorParts.head) {
+        actorParts.head.setAttribute('transform', `translate(0 ${(bob * 0.45).toFixed(2)}) rotate(0 212 100)`)
+      }
+    }
+
+    let walkFrame = 0
+    let lastWalkTime = 0
+    function requestWalkFrame() {
+      if (walkFrame || reducedMotion) return
+      walkFrame = window.requestAnimationFrame(function step(now) {
+        walkFrame = 0
+        const delta = lastWalkTime ? Math.min(0.05, (now - lastWalkTime) / 1000) : 0
+        lastWalkTime = now
+        paintWalk(delta)
+        if (walkStride > 0.001 || walkStrideTarget > 0.001) requestWalkFrame()
+        else lastWalkTime = 0
+      })
+    }
 
     if (mascot) {
       document.documentElement.dataset.pup = 'true'
       mascotBody?.setAttribute('opacity', '1')
       mascotShadow?.setAttribute('opacity', '0.12')
-      basketBody?.setAttribute('opacity', '1')
-      basketShadow?.setAttribute('opacity', '0.12')
+      basketBody?.setAttribute('opacity', '0')
+      basketShadow?.setAttribute('opacity', '0')
+      basketPuppy?.querySelector('[data-p="haunch"]')?.setAttribute('opacity', '0')
     }
 
     if (routeTransitionPending && curtain) {
@@ -412,12 +497,31 @@ function ReferenceSnapshotPage({ page, slug }) {
             ? 1
             : 0
         const basketOpacity = Math.max(0, Math.min(1, (basketApproach - 0.88) / 0.12))
+        const heroPoint = points.find((point) => point.stop && point.stop.classList.contains('tp-hero__teddy'))
+        const peekOut = heroPoint && from === heroPoint ? Math.min(1, progress * 2.4) : 1
+        const ledgeOpacity = heroPoint && from === heroPoint
+          ? Math.max(0, Math.min(1, 1 - progress * 2.4))
+          : 0
+        if (mascotBody) mascotBody.setAttribute('opacity', String(peekOut))
+        if (mascotShadow) mascotShadow.setAttribute('opacity', String(0.12 * peekOut))
+        if (actorParts?.ledge) actorParts.ledge.setAttribute('opacity', String(ledgeOpacity))
         actor.style.transformOrigin = 'top left'
         actor.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${scale})`
         actor.style.opacity = String(1 - basketOpacity)
         if (basketPuppy) {
           basketPuppy.style.visibility = basketOpacity > 0 ? 'visible' : 'hidden'
           basketPuppy.style.opacity = String(basketOpacity)
+        }
+
+        if (actorParts) {
+          const moved = lastActorX === null ? 0 : Math.abs(x - lastActorX)
+          lastActorX = x
+          walkStrideTarget = Math.min(1, moved / 9) * (1 - basketOpacity)
+          if (walkStrideTarget > 0.01) requestWalkFrame()
+          else {
+            walkStrideTarget = 0
+            requestWalkFrame()
+          }
         }
       }
 
@@ -466,13 +570,13 @@ function ReferenceSnapshotPage({ page, slug }) {
         paw.style.transform = `translate(${x + window.scrollX - size / 2}px, ${y + window.scrollY - size / 2}px) rotate(${direction + side * 0.12}rad)`
         paw.style.opacity = '0'
         void paw.getBoundingClientRect()
-        paw.style.transition = 'opacity 850ms ease-out'
-        paw.style.opacity = '0.24'
+        paw.style.transition = 'opacity 1400ms ease-out'
+        paw.style.opacity = '0.45'
 
         pawPrintTimers.set(paw, window.setTimeout(() => {
           paw.style.opacity = '0'
           pawPrintTimers.delete(paw)
-        }, 900))
+        }, 2800))
         pawPrintIndex += 1
       }
 
@@ -616,7 +720,19 @@ function ReferenceSnapshotPage({ page, slug }) {
         if (panel) {
           const expanded = button.getAttribute('aria-expanded') === 'true'
           button.setAttribute('aria-expanded', String(!expanded))
-          panel.hidden = expanded
+
+          const note = button.closest('.tp-note')
+          if (note) {
+            if (expanded) {
+              note.removeAttribute('data-unfolded')
+              panel.setAttribute('inert', '')
+            } else {
+              note.setAttribute('data-unfolded', '')
+              panel.removeAttribute('inert')
+            }
+          } else {
+            panel.hidden = expanded
+          }
         }
         return
       }

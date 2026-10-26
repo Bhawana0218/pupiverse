@@ -1,0 +1,118 @@
+.pup-actor__body svg [data-p='bf'],
+.pup-actor__body svg [data-p='ff'],
+.pup-actor__body svg [data-p='bn'],
+.pup-actor__body svg [data-p='fn'],
+.pup-actor__body svg [data-p='tail'],
+.pup-actor__body svg [data-p='body'],
+.pup-actor__body svg [data-p='head'] {
+  will-change: transform;
+}
+
+.tp-basket__pup .pup-buddy [data-p='body'],
+.tp-basket__pup .pup-buddy [data-p='haunch'],
+.tp-basket__pup .pup-buddy [data-p='shadow'] {
+  opacity: 0;
+}
+
+.tp-basket__pup .pup-buddy [data-p='bf'],
+.tp-basket__pup .pup-buddy [data-p='bn'] {
+  opacity: 1;
+}
+
+.pup-prints {
+  z-index: 5;
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  overflow: clip;
+}
+
+.pup-prints > svg {
+  opacity: 0;
+  width: 18px;
+  height: 18px;
+  fill: var(--color-toffee);
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.pup-prints > svg[data-pressed='true'] {
+  filter: drop-shadow(0 2px 1px rgba(42, 23, 14, 0.28));
+}
+
+.tp-house__doorway:hover .tp-house__door,
+.tp-house__doorway:focus-within .tp-house__door {
+  transform: rotateY(-102deg);
+}
+
+.tp-house__door {
+  transition: transform 1.1s cubic-bezier(0.3, 1.25, 0.5, 1);
+}
+
+.tp-house__doorway:hover {
+  box-shadow: 0 0 0 7px #b2733f, 0 0 0 10px var(--color-cocoa), 0 0 74px 26px #ffcd7885;
+}
+
+.pup-bubble[data-show='true'] {
+  opacity: 1;
+  scale: 1;
+}
+
+@media (max-width: 767px) {
+  .pup-bubble {
+    font-size: 0.95rem;
+    padding: 0.28rem 0.75rem 0.32rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pup-prints > svg {
+    transition: none !important;
+  }
+
+  .tp-house__door {
+    transition: none !important;
+  }
+}
+
+.tp-menu button {
+  color: var(--color-milk);
+}
+
+.btn-primary,
+.btn-whatsapp {
+  color: var(--color-milk);
+}
+
+.btn-whatsapp {
+  color: #fff;
+}
+
+.btn-ghost {
+  color: var(--color-cocoa);
+}
+
+.btn-ghost:hover {
+  color: var(--color-milk);
+}
+
+.tp-scene[data-tone='dark'] .btn-ghost {
+  color: var(--color-milk);
+}
+
+.tp-scene[data-tone='dark'] .btn-ghost:hover {
+  color: var(--color-cocoa);
+}
+
+.adm-btn {
+  color: var(--color-cocoa);
+}
+
+.adm-btn-primary {
+  color: var(--color-milk);
+}
+
+.adm-btn-danger {
+  color: #b3261e;
+}
